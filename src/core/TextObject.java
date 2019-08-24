@@ -39,7 +39,7 @@ import util.AttributeParsingErrorException;
  */
 public class TextObject extends TMXObject {
 	@SuppressWarnings("javadoc")
-	public String fontFamiliy;
+	public String fontFamily;
 	/**
 	 * <p>
 	 * The size of the font, in pixels. (Not points.)
@@ -138,7 +138,7 @@ public class TextObject extends TMXObject {
 		super(element);
 
 		Element textElement = Util.getSingleTag(element, "text", true);
-		fontFamiliy = Util.getStringAttribute(textElement, "fontfamily", "sans-serif");
+		fontFamily = Util.getStringAttribute(textElement, "fontfamily", "sans-serif");
 		pixelHeight = Util.getFloatAttribute(textElement, "pixelSize", 16);
 		wrapText = Util.getBoolAttribute(textElement, "wrap", false);
 		color = Util.getColorAttribute(textElement, "color", new TMXColor(0, 0, 0));
