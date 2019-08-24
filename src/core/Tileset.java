@@ -51,7 +51,7 @@ public class Tileset<IMG> {
 	/**
 	 * <p>
 	 * Custom properties for the tileset.
-	 * <p>
+	 * </p>
 	 * 
 	 * <p>
 	 * These properties apply to the whole tileset; for properties of individual

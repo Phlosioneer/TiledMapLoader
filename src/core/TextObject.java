@@ -38,8 +38,10 @@ import util.AttributeParsingErrorException;
  * </p>
  */
 public class TextObject extends TMXObject {
-	@SuppressWarnings("javadoc")
-	public String fontFamiliy;
+	/**
+	 * The name of the font family. Cannot be null.
+	 */
+	public String fontFamily;
 	/**
 	 * <p>
 	 * The size of the font, in pixels. (Not points.)
@@ -61,7 +63,9 @@ public class TextObject extends TMXObject {
 	 * </p>
 	 */
 	public boolean wrapText;
-	@SuppressWarnings("javadoc")
+	/**
+	 * The color of the text. Cannot be null.
+	 */
 	public TMXColor color;
 	@SuppressWarnings("javadoc")
 	public boolean bold;
@@ -82,6 +86,10 @@ public class TextObject extends TMXObject {
 	 * The vertical alignment of the text. See <i>VerticalAlign</i> for details.
 	 */
 	public VerticalAlign verticalAlign;
+	/**
+	 * The text. Cannot be null.
+	 */
+	public String text;
 
 	/**
 	 * 
@@ -138,8 +146,8 @@ public class TextObject extends TMXObject {
 		super(element);
 
 		Element textElement = Util.getSingleTag(element, "text", true);
-		fontFamiliy = Util.getStringAttribute(textElement, "fontfamily", "sans-serif");
-		pixelHeight = Util.getFloatAttribute(textElement, "pixelSize", 16);
+		fontFamily = Util.getStringAttribute(textElement, "fontfamily", "sans-serif");
+		pixelHeight = Util.getFloatAttribute(textElement, "pixelsize", 16);
 		wrapText = Util.getBoolAttribute(textElement, "wrap", false);
 		color = Util.getColorAttribute(textElement, "color", new TMXColor(0, 0, 0));
 		bold = Util.getBoolAttribute(textElement, "bold", false);
@@ -147,6 +155,12 @@ public class TextObject extends TMXObject {
 		underline = Util.getBoolAttribute(textElement, "underline", false);
 		strikeThrough = Util.getBoolAttribute(textElement, "strikeout", false);
 		useKerning = Util.getBoolAttribute(textElement, "kerning", true);
+		text = textElement.getTextContent();
+		if (text == null) {
+			text = "";
+		} else {
+			text = text.trim();
+		}
 		String horizontalAlignString = Util.getStringAttribute(textElement, "halign", "left");
 		String verticalAlignString = Util.getStringAttribute(textElement, "valign", "top");
 
@@ -171,5 +185,34 @@ public class TextObject extends TMXObject {
 		} else {
 			throw new AttributeParsingErrorException(textElement, "valign", "Expected \"top\", \"center\", or \"bottom\"", verticalAlignString);
 		}
+	}
+
+	/**
+	 * Work-around for Processing apps. Processing does not allow accessing fields named "color".
+	 * 
+	 * @return The color field.
+	 */
+	public TMXColor getColor() {
+		return color;
+	}
+
+	/**
+	 * Work-around for Processing apps. Processing does not allow accessing fields named "color".
+	 * 
+	 * @param color
+	 *            The new color.
+	 */
+	public void setColor(TMXColor color) {
+		this.color = color;
+	}
+
+	/**
+	 * Convert the pixelHeight to traditional font point height.
+	 * 
+	 */
+	public float getPointHeight() {
+		final float pixelsPerIn = 96;
+		final float pointsPerIn = 72;
+		return pixelHeight * pixelsPerIn / pointsPerIn;
 	}
 }
