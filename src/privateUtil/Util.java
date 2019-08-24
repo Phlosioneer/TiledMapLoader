@@ -97,11 +97,11 @@ public abstract class Util {
 	 * </p>
 	 * 
 	 * <p>
-	 * For example, for the tree:</br>
-	 * &lt;parent&gt;</br>
-	 * &nbsp;&nbsp;&lt;child1&gt;</br>
-	 * &nbsp;&nbsp;&lt;child2&gt;</br>
-	 * &lt;/parent&gt;</br>
+	 * For example, for the tree:<br>
+	 * &lt;parent&gt;<br>
+	 * &nbsp;&nbsp;&lt;child1&gt;<br>
+	 * &nbsp;&nbsp;&lt;child2&gt;<br>
+	 * &lt;/parent&gt;<br>
 	 * The paths for child1 and child2 are "root:parent[0]:child1" and "root:parent[1]:child2".
 	 * </p>
 	 * 
@@ -522,7 +522,7 @@ public abstract class Util {
 	 * </p>
 	 * 
 	 * <p>
-	 * If the attribute does not exist, <i>defaultValue<i> is returned instead.
+	 * If the attribute does not exist, <i>defaultValue</i> is returned instead.
 	 * </p>
 	 * 
 	 * @param e
