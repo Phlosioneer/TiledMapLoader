@@ -205,4 +205,14 @@ public class TextObject extends TMXObject {
 	public void setColor(TMXColor color) {
 		this.color = color;
 	}
+
+	/**
+	 * Convert the pixelHeight to traditional font point height.
+	 * 
+	 */
+	public float getPointHeight() {
+		final float pixelsPerIn = 96;
+		final float pointsPerIn = 72;
+		return pixelHeight * pixelsPerIn / pointsPerIn;
+	}
 }
