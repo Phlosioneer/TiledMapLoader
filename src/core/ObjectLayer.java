@@ -28,7 +28,7 @@ public class ObjectLayer<IMG> extends Layer {
 		for (Element objectData : Util.getAllTags(element, "object")) {
 			if (objectData.hasAttribute("gid")) {
 				objects.add(new TileObject<>(objectData, parent));
-			} else if (Util.hasChildNode(objectData, name)) {
+			} else if (Util.hasChildNode(objectData, "text")) {
 				objects.add(new TextObject(objectData));
 			} else {
 				objects.add(new ShapeObject(objectData));
