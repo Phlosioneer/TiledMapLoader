@@ -38,7 +38,9 @@ import util.AttributeParsingErrorException;
  * </p>
  */
 public class TextObject extends TMXObject {
-	@SuppressWarnings("javadoc")
+	/**
+	 * The name of the font family. Cannot be null.
+	 */
 	public String fontFamily;
 	/**
 	 * <p>
@@ -61,7 +63,9 @@ public class TextObject extends TMXObject {
 	 * </p>
 	 */
 	public boolean wrapText;
-	@SuppressWarnings("javadoc")
+	/**
+	 * The color of the text. Cannot be null.
+	 */
 	public TMXColor color;
 	@SuppressWarnings("javadoc")
 	public boolean bold;
@@ -82,6 +86,10 @@ public class TextObject extends TMXObject {
 	 * The vertical alignment of the text. See <i>VerticalAlign</i> for details.
 	 */
 	public VerticalAlign verticalAlign;
+	/**
+	 * The text. Cannot be null.
+	 */
+	public String text;
 
 	/**
 	 * 
@@ -147,6 +155,7 @@ public class TextObject extends TMXObject {
 		underline = Util.getBoolAttribute(textElement, "underline", false);
 		strikeThrough = Util.getBoolAttribute(textElement, "strikeout", false);
 		useKerning = Util.getBoolAttribute(textElement, "kerning", true);
+		text = Util.getStringAttribute(textElement, "text", "");
 		String horizontalAlignString = Util.getStringAttribute(textElement, "halign", "left");
 		String verticalAlignString = Util.getStringAttribute(textElement, "valign", "top");
 
