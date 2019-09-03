@@ -4,15 +4,30 @@ import org.w3c.dom.Element;
 import privateUtil.Util;
 import util.AttributeParsingErrorException;
 
+/**
+ * A layer of tiles.
+ * 
+ * @param <IMG>
+ *            The IMG param of the parent MapFile. See MapFile for more info.
+ */
 public class TileLayer<IMG> extends Layer {
 	private static final long FLIPPED_HORIZ_FLAG = 0x80000000;
 	private static final long FLIPPED_VERT_FLAG = 0x40000000;
 	private static final long FLIPPED_DIAG_FLAG = 0x20000000;
 	private static final long GID_MASK = ~(FLIPPED_HORIZ_FLAG | FLIPPED_VERT_FLAG | FLIPPED_DIAG_FLAG);
 
+	/**
+	 * The tiles in this layer. Tiles are stored in <i>tile[x][y]</i> format. Cannot be null.
+	 */
 	public Tile<IMG>[][] tiles;
-	public final int width;
-	public final int height;
+	/**
+	 * The width of the <i>tiles</i> field. Must match <i>tiles.length</i>.
+	 */
+	public int width;
+	/**
+	 * The height of the <i>tiles</i> field. Must match <i>tiles[_].length</i>.
+	 */
+	public int height;
 
 	@SuppressWarnings("unchecked")
 	TileLayer(Element element, MapFile<IMG> parent) {
@@ -56,4 +71,9 @@ public class TileLayer<IMG> extends Layer {
 			}
 		}
 	}
+
+	/**
+	 * Manually create a TileLayer instance. No fields are initialized.
+	 */
+	public TileLayer() {}
 }

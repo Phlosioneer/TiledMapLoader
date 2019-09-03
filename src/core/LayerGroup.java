@@ -24,6 +24,11 @@ public class LayerGroup<IMG> extends Layer {
 		layers = parseLayers(element, parent, delegate);
 	}
 
+	/**
+	 * Manually create a LayerGroup instance. No fields are initialized.
+	 */
+	public LayerGroup() {}
+
 	static <IMG> ArrayList<Layer> parseLayers(Element element, MapFile<IMG> parent, ImageDelegate<IMG> delegate) {
 		ArrayList<Layer> layers = new ArrayList<>();
 		NodeList allNodes = element.getChildNodes();
@@ -58,6 +63,13 @@ public class LayerGroup<IMG> extends Layer {
 		return layers;
 	}
 
+	/**
+	 * Search the direct descendents of this group for a layer with the given name.
+	 * 
+	 * @param name
+	 *            The name of the layer to find.
+	 * @return The layer, or <i>null</i> if no matching layer is found.
+	 */
 	public Layer getLayerByName(String name) {
 		for (Layer layer : layers) {
 			if (layer.name.equals(name)) {
@@ -67,12 +79,21 @@ public class LayerGroup<IMG> extends Layer {
 		return null;
 	}
 
+	/**
+	 * Same as <i>getLayerByName</i>, but also searches sub-groups recursively.
+	 * 
+	 * @param name
+	 *            The name of the layer to find.
+	 * @return The layer, or <i>null</i> if no matching layer is found.
+	 */
 	public Layer getLayerByNameRecursive(String name) {
 		for (Layer layer : layers) {
 			if (layer.name.equals(name)) {
 				return layer;
 			}
 			if (layer instanceof LayerGroup) {
+				// Technically, we can't know for sure that the layer's IMG type is the same as our IMG type.
+				@SuppressWarnings("unchecked")
 				Layer recurse = ((LayerGroup<IMG>) layer).getLayerByNameRecursive(name);
 				if (recurse != null) {
 					return recurse;

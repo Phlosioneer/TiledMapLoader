@@ -77,4 +77,9 @@ public class ImageLayer<IMG> extends Layer {
 			image = null;
 		}
 	}
+
+	/**
+	 * Manually create an ImageLayer instance. No fields are initialized.
+	 */
+	public ImageLayer() {}
 }

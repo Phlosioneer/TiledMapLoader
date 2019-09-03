@@ -119,6 +119,14 @@ public class MapFile<IMG> {
 		throw new RuntimeException("Unknown tile gid '" + gid + "'");
 	}
 
+	/**
+	 * Search the direct descendents of this group for a layer with the given name.
+	 * 
+	 * @param name
+	 *            The name of the layer to find.
+	 * @return The layer, or <i>null</i> if no matching layer is found.
+	 */
+	// Basically copy-pasted from LayerGroup.
 	public Layer getLayerByName(String name) {
 		for (Layer layer : layers) {
 			if (layer.name.equals(name)) {
@@ -128,12 +136,22 @@ public class MapFile<IMG> {
 		return null;
 	}
 
+	/**
+	 * Same as <i>getLayerByName</i>, but also searches sub-groups recursively.
+	 * 
+	 * @param name
+	 *            The name of the layer to find.
+	 * @return The layer, or <i>null</i> if no matching layer is found.
+	 */
+	// Basically copy-pasted from LayerGroup.
 	public Layer getLayerByNameRecursive(String name) {
 		for (Layer layer : layers) {
 			if (layer.name.equals(name)) {
 				return layer;
 			}
 			if (layer instanceof LayerGroup) {
+				// Technically, we can't know for sure that the layer's IMG type is the same as our IMG type.
+				@SuppressWarnings("unchecked")
 				Layer recurse = ((LayerGroup<IMG>) layer).getLayerByNameRecursive(name);
 				if (recurse != null) {
 					return recurse;
@@ -143,11 +161,23 @@ public class MapFile<IMG> {
 		return null;
 	}
 
+	/**
+	 * This is a wrapper for a Tileset that contains map-spesific fields, like <i>firstGid</i>.
+	 *
+	 * @param <IMG>
+	 *            The IMG param of the parent MapFile. See MapFile for more info.
+	 */
 	public static class TilesetEntry<IMG> {
+		/**
+		 * The actual tileset. Cannot be null.
+		 */
 		public Tileset<IMG> tiles;
+		/**
+		 * The gid of the first tile in the tileset.
+		 */
 		public int firstGid;
 
-		public TilesetEntry(Element element, FileLocatorDelegate fileDelegate, ImageDelegate<IMG> imageDelegate) {
+		TilesetEntry(Element element, FileLocatorDelegate fileDelegate, ImageDelegate<IMG> imageDelegate) {
 			firstGid = Util.getIntAttribute(element, "firstgid", 1);
 			if (element.hasAttribute("source")) {
 				String filename = element.getAttribute("source");

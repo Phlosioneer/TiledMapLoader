@@ -16,12 +16,17 @@ public final class TMXProperties {
 	private HashMap<String, String> stringProps;
 	private HashMap<String, Float> floatProps;
 	private HashMap<String, Boolean> boolProps;
+	private HashMap<String, TMXColor> colorProps;
 
-	TMXProperties() {
+	/**
+	 * Create an empty TMXProperties object.
+	 */
+	public TMXProperties() {
 		intProps = null;
 		stringProps = null;
 		floatProps = null;
 		boolProps = null;
+		colorProps = null;
 	}
 
 	TMXProperties(Element rootElement) {
@@ -57,6 +62,11 @@ public final class TMXProperties {
 					boolProps = new HashMap<>();
 				}
 				boolProps.put(name, Util.getBoolAttribute(prop, "value"));
+			} else if (type.equals("color")) {
+				if (colorProps == null) {
+					colorProps = new HashMap<>();
+				}
+				colorProps.put(name, Util.getColorAttribute(prop, "value"));
 			} else {
 				throw new AttributeParsingErrorException(prop, "value", "Unrecognized property type", type);
 			}
@@ -89,6 +99,13 @@ public final class TMXProperties {
 			return false;
 		}
 		return boolProps.containsKey(name);
+	}
+
+	public boolean hasColor(String name) {
+		if (colorProps == null) {
+			return false;
+		}
+		return colorProps.containsKey(name);
 	}
 
 	public String getString(String name) {
@@ -145,5 +162,54 @@ public final class TMXProperties {
 			return defaultValue;
 		}
 		return boolProps.get(name);
+	}
+
+	public TMXColor getColor(String name) {
+		if (!hasColor(name)) {
+			throw new RuntimeException("No color property named '" + name + "'");
+		}
+		return colorProps.get(name);
+	}
+
+	public TMXColor getColor(String name, TMXColor defaultValue) {
+		if (!hasColor(name)) {
+			return defaultValue;
+		}
+		return colorProps.get(name);
+	}
+
+	public void setString(String name, String value) {
+		if (stringProps == null) {
+			stringProps = new HashMap<>();
+		}
+		stringProps.put(name, value);
+	}
+
+	public void setInt(String name, int value) {
+		if (intProps == null) {
+			intProps = new HashMap<>();
+		}
+		intProps.put(name, value);
+	}
+
+	public void setFloat(String name, float value) {
+		if (floatProps == null) {
+			floatProps = new HashMap<>();
+		}
+		floatProps.put(name, value);
+	}
+
+	public void setBool(String name, boolean value) {
+		if (boolProps == null) {
+			boolProps = new HashMap<>();
+		}
+		boolProps.put(name, value);
+	}
+
+	public void setColor(String name, TMXColor value) {
+		if (colorProps == null) {
+			colorProps = new HashMap<>();
+		}
+		colorProps.put(name, value);
 	}
 }

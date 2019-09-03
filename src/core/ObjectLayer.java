@@ -9,7 +9,7 @@ import util.AttributeParsingErrorException;
  * A layer containing an array of objects.
  *
  * @param <IMG>
- *            See the MapFile class.
+ *            The IMG param of the parent MapFile. See MapFile for more info.
  */
 public class ObjectLayer<IMG> extends Layer {
 	/**
@@ -36,6 +36,24 @@ public class ObjectLayer<IMG> extends Layer {
 		}
 	}
 
+	/**
+	 * Manually create an ObjectLayer instance. No fields are initialized.
+	 */
+	public ObjectLayer() {}
+
+	/**
+	 * <p>
+	 * Search all member objects for one with the given name.
+	 * </p>
+	 * 
+	 * <p>
+	 * If multiple objects have the same name, the first one found is returned.
+	 * </p>
+	 * 
+	 * @param name
+	 *            The object name to look for.
+	 * @return The object, or null if no object was found.
+	 */
 	public TMXObject getObjectByName(String name) {
 		for (TMXObject object : objects) {
 			if (object.name.equals(name)) {
@@ -45,6 +63,13 @@ public class ObjectLayer<IMG> extends Layer {
 		return null;
 	}
 
+	/**
+	 * Return all member objects with the given name.
+	 * 
+	 * @param name
+	 *            The object name to look for.
+	 * @return The objects. Cannot be null; an empty list is returned if no objects are found.
+	 */
 	public ArrayList<TMXObject> getObjectsByName(String name) {
 		ArrayList<TMXObject> ret = new ArrayList<>();
 		for (TMXObject object : objects) {

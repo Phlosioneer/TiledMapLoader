@@ -85,4 +85,9 @@ public abstract class TMXObject {
 			properties = null;
 		}
 	}
+
+	/**
+	 * Manually create a TMXObject instance. No fields are initialized.
+	 */
+	public TMXObject() {}
 }
