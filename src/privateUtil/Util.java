@@ -214,20 +214,34 @@ public abstract class Util {
 	}
 
 	private static TMXColor parseColor(Element e, String attributeName, String unparsedColor) {
-		if (unparsedColor.charAt(0) != '#' || (unparsedColor.length() != 7 && unparsedColor.length() != 9)) {
-			throw new AttributeParsingErrorException(e, attributeName, "Invalid color format; expected #RRGGBB or #RRGGBBAA.", unparsedColor);
+		int prefixOffset;
+		if (unparsedColor.charAt(0) == '#') {
+			prefixOffset = 1;
+		} else {
+			prefixOffset = 0;
 		}
+
+		if (unparsedColor.length() - prefixOffset != 6 && unparsedColor.length() - prefixOffset != 8) {
+			if (prefixOffset == 1) {
+				throw new AttributeParsingErrorException(e, attributeName, "Invalid color format; expected #RRGGBB or #RRGGBBAA.", unparsedColor);
+			} else {
+				throw new AttributeParsingErrorException(e, attributeName, "Invalid color format; expected RRGGBB or RRGGBBAA.", unparsedColor);
+			}
+		}
+
+		// Remove the #.
+		String correctedString = unparsedColor.substring(prefixOffset);
 
 		int red = -1;
 		int green = -1;
 		int blue = -1;
 		int alpha = -1;
-		String redString = unparsedColor.substring(1, 3);
-		String greenString = unparsedColor.substring(3, 5);
-		String blueString = unparsedColor.substring(5, 7);
+		String redString = unparsedColor.substring(0, 2);
+		String greenString = unparsedColor.substring(2, 4);
+		String blueString = unparsedColor.substring(4, 6);
 		String alphaString = null;
-		if (unparsedColor.length() == 9) {
-			alphaString = unparsedColor.substring(7, 9);
+		if (unparsedColor.length() == 8) {
+			alphaString = unparsedColor.substring(6, 8);
 		}
 
 		try {
@@ -250,6 +264,7 @@ public abstract class Util {
 			if (blue != -1) {
 				throw new AttributeParsingErrorException(e, attributeName, "Invalid blue value", blueString, exception);
 			}
+			throw new AttributeParsingErrorException(e, attributeName, "Invalid alpha value", alphaString, exception);
 		}
 
 		return new TMXColor(red, blue, green, alpha);
