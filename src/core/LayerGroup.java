@@ -5,6 +5,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import privateUtil.Util;
+import util.FileParsingException;
 import util.ImageDelegate;
 
 /**
@@ -24,16 +25,18 @@ public class LayerGroup<IMG> extends Layer {
 		layers = parseLayers(element, parent, delegate);
 	}
 
+	/**
+	 * Manually create a LayerGroup instance. No fields are initialized.
+	 */
+	public LayerGroup() {}
+
 	static <IMG> ArrayList<Layer> parseLayers(Element element, MapFile<IMG> parent, ImageDelegate<IMG> delegate) {
 		ArrayList<Layer> layers = new ArrayList<>();
 		NodeList allNodes = element.getChildNodes();
 		for (int i = 0; i < allNodes.getLength(); i++) {
 			Node node = allNodes.item(i);
-			if (node.getNodeType() == Node.TEXT_NODE) {
-				continue;
-			}
 			if (node.getNodeType() != Node.ELEMENT_NODE) {
-				throw new RuntimeException();
+				continue;
 			}
 			Element layer = (Element) node;
 
@@ -48,16 +51,23 @@ public class LayerGroup<IMG> extends Layer {
 				layers.add(new ImageLayer<>(layer, delegate));
 			} else if (name.equals("tileset")) {
 				if (layers.size() != 0) {
-					throw new RuntimeException(Util.getFullXmlPath(layer) + ": Found 'tileset' element after map layer elements");
+					throw new FileParsingException(Util.getFullXmlPath(layer) + ": Found 'tileset' element after layer elements");
 				}
 			} else {
-				throw new RuntimeException("Unknown element type: '" + name + "'");
+				throw new FileParsingException("Unknown element type: '" + name + "'");
 			}
 		}
 
 		return layers;
 	}
 
+	/**
+	 * Search the direct descendents of this group for a layer with the given name.
+	 * 
+	 * @param name
+	 *            The name of the layer to find.
+	 * @return The layer, or <i>null</i> if no matching layer is found.
+	 */
 	public Layer getLayerByName(String name) {
 		for (Layer layer : layers) {
 			if (layer.name.equals(name)) {
@@ -67,12 +77,21 @@ public class LayerGroup<IMG> extends Layer {
 		return null;
 	}
 
+	/**
+	 * Same as <i>getLayerByName</i>, but also searches sub-groups recursively.
+	 * 
+	 * @param name
+	 *            The name of the layer to find.
+	 * @return The layer, or <i>null</i> if no matching layer is found.
+	 */
 	public Layer getLayerByNameRecursive(String name) {
 		for (Layer layer : layers) {
 			if (layer.name.equals(name)) {
 				return layer;
 			}
 			if (layer instanceof LayerGroup) {
+				// Technically, we can't know for sure that the layer's IMG type is the same as our IMG type.
+				@SuppressWarnings("unchecked")
 				Layer recurse = ((LayerGroup<IMG>) layer).getLayerByNameRecursive(name);
 				if (recurse != null) {
 					return recurse;

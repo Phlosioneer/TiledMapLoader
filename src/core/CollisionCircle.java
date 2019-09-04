@@ -3,6 +3,7 @@ package core;
 import org.w3c.dom.Element;
 import privateUtil.Util;
 import util.AttributeParsingErrorException;
+import util.FileParsingException;
 import util.Vector;
 
 public class CollisionCircle extends CollisionBounds {
@@ -31,7 +32,7 @@ public class CollisionCircle extends CollisionBounds {
 		center = new Vector(x, y);
 		this.radius = radius;
 		if (radius < 0) {
-			throw new RuntimeException();
+			throw new FileParsingException("Cannot create a circle with negative radius!");
 		}
 	}
 

@@ -2,6 +2,7 @@ package core;
 
 import org.w3c.dom.Element;
 import privateUtil.Util;
+import util.FileParsingException;
 import util.Vector;
 
 /**
@@ -65,7 +66,7 @@ public abstract class TMXObject {
 
 	TMXObject(Element element) {
 		if (element.hasAttribute("template")) {
-			throw new RuntimeException("Templates not supported yet.");
+			throw new FileParsingException("Templates not supported yet.");
 		}
 		id = Util.getIntAttribute(element, "id");
 		name = Util.getStringAttribute(element, "name", "");
@@ -85,4 +86,9 @@ public abstract class TMXObject {
 			properties = null;
 		}
 	}
+
+	/**
+	 * Manually create a TMXObject instance. No fields are initialized.
+	 */
+	public TMXObject() {}
 }

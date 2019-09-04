@@ -188,6 +188,11 @@ public class TextObject extends TMXObject {
 	}
 
 	/**
+	 * Manually create a TextObject instance. No fields are initialized.
+	 */
+	public TextObject() {}
+
+	/**
 	 * Work-around for Processing apps. Processing does not allow accessing fields named "color".
 	 * 
 	 * @return The color field.
@@ -213,6 +218,6 @@ public class TextObject extends TMXObject {
 	public float getPointHeight() {
 		final float pixelsPerIn = 96;
 		final float pointsPerIn = 72;
-		return pixelHeight * pixelsPerIn / pointsPerIn;
+		return pixelHeight * pointsPerIn / pixelsPerIn;
 	}
 }

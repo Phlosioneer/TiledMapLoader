@@ -87,6 +87,11 @@ public class ShapeObject extends TMXObject {
 		}
 	}
 
+	/**
+	 * Manually create a ShapeObject instance. No fields are initialized.
+	 */
+	public ShapeObject() {}
+
 	private void loadPoints(Element element) {
 		String unparsedPointString = Util.getStringAttribute(element, "points");
 		if (unparsedPointString.isEmpty()) {

@@ -173,6 +173,5 @@ public class Tileset<IMG> {
 			}
 			tiles[i] = tile;
 		}
-
 	}
 }

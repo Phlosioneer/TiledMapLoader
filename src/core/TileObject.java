@@ -33,4 +33,9 @@ public class TileObject<IMG> extends TMXObject {
 		int tileId = Util.getIntAttribute(element, "gid");
 		tile = parent.getTile(tileId);
 	}
+
+	/**
+	 * Manually create a TileObject instance. No fields are initialized.
+	 */
+	public TileObject() {}
 }
