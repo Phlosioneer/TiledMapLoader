@@ -12,7 +12,7 @@ public class TMXColor {
 	}
 
 	public TMXColor(int red, int blue, int green) {
-		this(red, blue, green, 0);
+		this(red, blue, green, 255);
 	}
 
 	public TMXColor(int red, int blue, int green, int alpha) {
