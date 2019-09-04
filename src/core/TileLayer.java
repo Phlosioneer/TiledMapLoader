@@ -3,6 +3,7 @@ package core;
 import org.w3c.dom.Element;
 import privateUtil.Util;
 import util.AttributeParsingErrorException;
+import util.FileParsingException;
 
 /**
  * A layer of tiles.
@@ -47,7 +48,7 @@ public class TileLayer<IMG> extends Layer {
 
 		String encoding = Util.getStringAttribute(dataElement, "encoding", "individual");
 		if (!encoding.equals("csv")) {
-			throw new RuntimeException("Unsupported data encoding: '" + encoding + "'");
+			throw new FileParsingException("Unsupported data encoding: '" + encoding + "'");
 		}
 
 		String csv = dataElement.getTextContent();
@@ -64,7 +65,7 @@ public class TileLayer<IMG> extends Layer {
 				gid &= GID_MASK;
 
 				if (flippedHoriz || flippedVert || flippedDiag) {
-					throw new RuntimeException("Tile flipping and rotating not supported yet!");
+					throw new FileParsingException("Tile flipping and rotating not supported yet!");
 				}
 
 				tiles[col][row] = parent.getTile((int) gid);

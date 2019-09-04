@@ -6,7 +6,7 @@ import privateUtil.Util;
 /**
  * This exception is thrown when an attribute could not be parsed.
  */
-public class AttributeParsingErrorException extends RuntimeException {
+public class AttributeParsingErrorException extends FileParsingException {
 
 	/**
 	 * @param element

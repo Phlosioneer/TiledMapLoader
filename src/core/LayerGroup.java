@@ -5,6 +5,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import privateUtil.Util;
+import util.FileParsingException;
 import util.ImageDelegate;
 
 /**
@@ -34,11 +35,8 @@ public class LayerGroup<IMG> extends Layer {
 		NodeList allNodes = element.getChildNodes();
 		for (int i = 0; i < allNodes.getLength(); i++) {
 			Node node = allNodes.item(i);
-			if (node.getNodeType() == Node.TEXT_NODE) {
-				continue;
-			}
 			if (node.getNodeType() != Node.ELEMENT_NODE) {
-				throw new RuntimeException();
+				continue;
 			}
 			Element layer = (Element) node;
 
@@ -53,10 +51,10 @@ public class LayerGroup<IMG> extends Layer {
 				layers.add(new ImageLayer<>(layer, delegate));
 			} else if (name.equals("tileset")) {
 				if (layers.size() != 0) {
-					throw new RuntimeException(Util.getFullXmlPath(layer) + ": Found 'tileset' element after map layer elements");
+					throw new FileParsingException(Util.getFullXmlPath(layer) + ": Found 'tileset' element after layer elements");
 				}
 			} else {
-				throw new RuntimeException("Unknown element type: '" + name + "'");
+				throw new FileParsingException("Unknown element type: '" + name + "'");
 			}
 		}
 

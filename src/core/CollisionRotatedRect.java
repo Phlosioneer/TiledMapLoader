@@ -37,7 +37,7 @@ public class CollisionRotatedRect extends CollisionBounds {
 		}
 		float degreeRotation = Util.getFloatAttribute(data, "rotation");
 		if (degreeRotation == 0) {
-			throw new RuntimeException("Used a CollisionRotatedRect when a CollisionBox would have been sufficient");
+			throw new RuntimeException("Internal error: Used a CollisionRotatedRect when a CollisionBox would have been sufficient");
 		}
 		rotation = (float) Math.toRadians(degreeRotation);
 
