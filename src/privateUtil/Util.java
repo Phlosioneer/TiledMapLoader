@@ -251,7 +251,7 @@ public abstract class Util {
 			if (alphaString != null) {
 				alpha = Integer.parseInt(alphaString, 16);
 			} else {
-				alpha = 0;
+				alpha = 255;
 			}
 		} catch (NumberFormatException exception) {
 			// Figure out which one failed.
