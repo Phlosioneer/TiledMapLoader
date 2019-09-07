@@ -214,10 +214,19 @@ public class TextObject extends TMXObject {
 	/**
 	 * Convert the pixelHeight to traditional font point height.
 	 * 
+	 * @return The height, in points.
+	 * 
 	 */
 	public float getPointHeight() {
 		final float pixelsPerIn = 96;
 		final float pointsPerIn = 72;
 		return pixelHeight * pointsPerIn / pixelsPerIn;
+	}
+
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+		TextObject ret = (TextObject) super.clone();
+		ret.color = (TMXColor) color.clone();
+		return ret;
 	}
 }

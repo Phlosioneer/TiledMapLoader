@@ -121,4 +121,11 @@ public class ShapeObject extends TMXObject {
 			}
 		}
 	}
+
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+		ShapeObject ret = (ShapeObject) super.clone();
+		ret.points = points.clone();
+		return ret;
+	}
 }
