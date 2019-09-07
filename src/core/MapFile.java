@@ -62,6 +62,12 @@ public class MapFile<IMG> {
 	private float hexSideLength;
 	private boolean m_hasHexSideLength;
 
+	public int tileWidth;
+	public int tileHeight;
+
+	public int mapWidth;
+	public int mapHeight;
+
 	/**
 	 * 
 	 * <p>
@@ -154,6 +160,10 @@ public class MapFile<IMG> {
 		}
 
 		backgroundColor = Util.getColorAttribute(root, "backgroundcolor", new TMXColor(0, 0, 0, 0));
+		tileWidth = Util.getIntAttribute(root, "tilewidth");
+		tileHeight = Util.getIntAttribute(root, "tileheight");
+		mapWidth = Util.getIntAttribute(root, "width");
+		mapHeight = Util.getIntAttribute(root, "height");
 
 		// Look for tilesets.
 		tilesets = new ArrayList<>();

@@ -1,6 +1,6 @@
 package core;
 
-public class TMXColor {
+public class TMXColor implements Cloneable {
 
 	public int red;
 	public int green;
@@ -20,5 +20,10 @@ public class TMXColor {
 		this.blue = blue;
 		this.green = green;
 		this.alpha = alpha;
+	}
+
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+		return super.clone();
 	}
 }

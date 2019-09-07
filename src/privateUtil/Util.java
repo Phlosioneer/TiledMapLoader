@@ -236,35 +236,41 @@ public abstract class Util {
 		int green = -1;
 		int blue = -1;
 		int alpha = -1;
-		String redString = unparsedColor.substring(0, 2);
-		String greenString = unparsedColor.substring(2, 4);
-		String blueString = unparsedColor.substring(4, 6);
+		String redString = correctedString.substring(0, 2);
+		String greenString = correctedString.substring(2, 4);
+		String blueString = correctedString.substring(4, 6);
 		String alphaString = null;
-		if (unparsedColor.length() == 8) {
-			alphaString = unparsedColor.substring(6, 8);
+		if (correctedString.length() == 8) {
+			alphaString = correctedString.substring(6, 8);
 		}
 
 		try {
 			red = Integer.parseInt(redString, 16);
-			green = Integer.parseInt(greenString, 16);
-			blue = Integer.parseInt(blueString, 16);
-			if (alphaString != null) {
-				alpha = Integer.parseInt(alphaString, 16);
-			} else {
-				alpha = 0;
-			}
 		} catch (NumberFormatException exception) {
-			// Figure out which one failed.
-			if (red != -1) {
-				throw new AttributeParsingErrorException(e, attributeName, "Invalid red value", redString, exception);
+			throw new AttributeParsingErrorException(e, attributeName, "Invalid red value", redString, exception);
+
+		}
+		try {
+			green = Integer.parseInt(greenString, 16);
+		} catch (NumberFormatException exception) {
+			throw new AttributeParsingErrorException(e, attributeName, "Invalid green value", greenString, exception);
+
+		}
+		try {
+			blue = Integer.parseInt(blueString, 16);
+		} catch (NumberFormatException exception) {
+			throw new AttributeParsingErrorException(e, attributeName, "Invalid blue value", blueString, exception);
+
+		}
+		if (alphaString != null) {
+			try {
+				alpha = Integer.parseInt(alphaString, 16);
+			} catch (NumberFormatException exception) {
+				throw new AttributeParsingErrorException(e, attributeName, "Invalid alpha value", alphaString, exception);
+
 			}
-			if (green != -1) {
-				throw new AttributeParsingErrorException(e, attributeName, "Invalid green value", greenString, exception);
-			}
-			if (blue != -1) {
-				throw new AttributeParsingErrorException(e, attributeName, "Invalid blue value", blueString, exception);
-			}
-			throw new AttributeParsingErrorException(e, attributeName, "Invalid alpha value", alphaString, exception);
+		} else {
+			alpha = 255;
 		}
 
 		return new TMXColor(red, blue, green, alpha);

@@ -12,7 +12,7 @@ import util.PropertyNotFoundException;
  * An immutable dictionary for custom TMX properties.
  *
  */
-public final class TMXProperties {
+public final class TMXProperties implements Cloneable {
 	private HashMap<String, Integer> intProps;
 	private HashMap<String, String> stringProps;
 	private HashMap<String, Float> floatProps;
@@ -577,5 +577,28 @@ public final class TMXProperties {
 	public void setColorChecked(String name, TMXColor value) {
 		doRemoveCheck(name, true, true, true, true, false);
 		setColor(name, value);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+		TMXProperties ret = (TMXProperties) super.clone();
+		if (stringProps != null) {
+			ret.stringProps = (HashMap<String, String>) stringProps.clone();
+		}
+		if (intProps != null) {
+			ret.intProps = (HashMap<String, Integer>) intProps.clone();
+		}
+		if (floatProps != null) {
+			ret.floatProps = (HashMap<String, Float>) floatProps.clone();
+		}
+		if (boolProps != null) {
+			ret.boolProps = (HashMap<String, Boolean>) boolProps.clone();
+		}
+		if (colorProps != null) {
+			ret.colorProps = (HashMap<String, TMXColor>) colorProps.clone();
+		}
+
+		return ret;
 	}
 }

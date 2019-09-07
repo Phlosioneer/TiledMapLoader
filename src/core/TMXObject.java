@@ -9,7 +9,7 @@ import util.Vector;
  * Basic info common to all objects in objectLayers. Depending on the <i>kind</i> enum,
  * the <i>size</i> may not be used.
  */
-public abstract class TMXObject {
+public abstract class TMXObject implements Cloneable {
 	/**
 	 * <p>
 	 * Unique global ID for this object.
@@ -91,4 +91,13 @@ public abstract class TMXObject {
 	 * Manually create a TMXObject instance. No fields are initialized.
 	 */
 	public TMXObject() {}
+
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+		TMXObject ret = (TMXObject) super.clone();
+		ret.position = new Vector(position.x, position.y);
+		ret.size = new Vector(size.x, size.y);
+		ret.properties = (TMXProperties) properties.clone();
+		return ret;
+	}
 }

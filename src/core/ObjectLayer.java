@@ -68,12 +68,29 @@ public class ObjectLayer<IMG> extends Layer {
 	 * 
 	 * @param name
 	 *            The object name to look for.
-	 * @return The objects. Cannot be null; an empty list is returned if no objects are found.
+	 * @return The objects. Cannot be null; an empty list is returned if no objects were found.
 	 */
 	public ArrayList<TMXObject> getObjectsByName(String name) {
 		ArrayList<TMXObject> ret = new ArrayList<>();
 		for (TMXObject object : objects) {
 			if (object.name.equals(name)) {
+				ret.add(object);
+			}
+		}
+		return ret;
+	}
+
+	/**
+	 * Return all member objects with the given type.
+	 * 
+	 * @param type
+	 *            The type name to look for.
+	 * @return The objects. Cannot be null; an empty list is returned if no objects were found.
+	 */
+	public ArrayList<TMXObject> getObjectsByType(String type) {
+		ArrayList<TMXObject> ret = new ArrayList<>();
+		for (TMXObject object : objects) {
+			if (object.type.equals(type)) {
 				ret.add(object);
 			}
 		}
