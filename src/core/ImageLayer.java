@@ -82,4 +82,17 @@ public class ImageLayer<IMG> extends Layer {
 	 * Manually create an ImageLayer instance. No fields are initialized.
 	 */
 	public ImageLayer() {}
+
+	/**
+	 * WARNING: DOES NOT CLONE IMAGE.
+	 */
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+		@SuppressWarnings("unchecked")
+		ImageLayer<IMG> ret = (ImageLayer<IMG>) super.clone();
+		if (transparentColor != null) {
+			ret.transparentColor = (TMXColor) transparentColor.clone();
+		}
+		return ret;
+	}
 }

@@ -100,4 +100,15 @@ public class LayerGroup<IMG> extends Layer {
 		}
 		return null;
 	}
+
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+		@SuppressWarnings("unchecked")
+		LayerGroup<IMG> ret = (LayerGroup<IMG>) super.clone();
+		ret.layers = new ArrayList<>(layers.size());
+		for (Layer layer : layers) {
+			ret.layers.add((Layer) layer.clone());
+		}
+		return ret;
+	}
 }

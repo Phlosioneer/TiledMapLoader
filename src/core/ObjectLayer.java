@@ -96,4 +96,15 @@ public class ObjectLayer<IMG> extends Layer {
 		}
 		return ret;
 	}
+
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+		@SuppressWarnings("unchecked")
+		ObjectLayer<IMG> ret = (ObjectLayer<IMG>) super.clone();
+		ret.objects = new ArrayList<>(objects.size());
+		for (TMXObject object : objects) {
+			ret.objects.add((TMXObject) object.clone());
+		}
+		return ret;
+	}
 }

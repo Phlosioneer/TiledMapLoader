@@ -3,6 +3,8 @@ package core;
 import org.w3c.dom.Element;
 import privateUtil.Util;
 import util.FileParsingException;
+import util.LayerCastException;
+import util.TMXObjectCastException;
 import util.Vector;
 
 /**
@@ -62,6 +64,9 @@ public abstract class TMXObject implements Cloneable {
 	 * Whether the object is drawn on screen.
 	 */
 	public boolean isVisible;
+	/**
+	 * Custom properties for this object. Can be null.
+	 */
 	public TMXProperties properties;
 
 	TMXObject(Element element) {
@@ -95,9 +100,60 @@ public abstract class TMXObject implements Cloneable {
 	@Override
 	public Object clone() throws CloneNotSupportedException {
 		TMXObject ret = (TMXObject) super.clone();
-		ret.position = new Vector(position.x, position.y);
-		ret.size = new Vector(size.x, size.y);
-		ret.properties = (TMXProperties) properties.clone();
+		ret.position = (Vector) position.clone();
+		ret.size = (Vector) size.clone();
+		if (properties != null) {
+			ret.properties = (TMXProperties) properties.clone();
+		}
 		return ret;
+	}
+
+	/**
+	 * Convenience method to cast this object into a TileObject.
+	 * 
+	 * @param <IMG>
+	 *            The IMG for the casted TileObject. When casting, this function cannot check
+	 *            that IMG is correct.
+	 * @return This object as a TileObject.
+	 * @throws LayerCastException
+	 *             If this isn't a TileObject instance.
+	 */
+	@SuppressWarnings("unchecked")
+	public <IMG> TileObject<IMG> asTile() {
+		if (this.getClass() == TileObject.class) {
+			return (TileObject<IMG>) this;
+		} else {
+			throw new TMXObjectCastException(name, id, "TileObject");
+		}
+	}
+
+	/**
+	 * Convenience method to cast this object into a ShapeObject.
+	 * 
+	 * @return This object as a ShapeObject.
+	 * @throws LayerCastException
+	 *             If this isn't a ShapeObject instance.
+	 */
+	public ShapeObject asShape() {
+		if (this.getClass() == ShapeObject.class) {
+			return (ShapeObject) this;
+		} else {
+			throw new TMXObjectCastException(name, id, "ShapeObject");
+		}
+	}
+
+	/**
+	 * Convenience method to cast this object into a TextObject.
+	 * 
+	 * @return This object as a TextObject.
+	 * @throws LayerCastException
+	 *             If this isn't a TextObject instance.
+	 */
+	public TextObject asText() {
+		if (this.getClass() == TextObject.class) {
+			return (TextObject) this;
+		} else {
+			throw new TMXObjectCastException(name, id, "TextObject");
+		}
 	}
 }

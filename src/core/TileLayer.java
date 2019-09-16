@@ -77,4 +77,17 @@ public class TileLayer<IMG> extends Layer {
 	 * Manually create a TileLayer instance. No fields are initialized.
 	 */
 	public TileLayer() {}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+		TileLayer<IMG> ret = (TileLayer<IMG>) super.clone();
+		ret.tiles = new Tile[width][height];
+		for (int i = 0; i < width; i++) {
+			for (int j = 0; j < height; j++) {
+				ret.tiles[i][j] = tiles[i][j];
+			}
+		}
+		return ret;
+	}
 }
