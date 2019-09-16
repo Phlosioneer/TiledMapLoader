@@ -1,6 +1,6 @@
 package util;
 
-public class Vector {
+public class Vector implements Cloneable {
 	public float x;
 	public float y;
 
@@ -51,5 +51,10 @@ public class Vector {
 
 	public float dot(Vector other) {
 		return x * other.x + y * other.y;
+	}
+
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+		return super.clone();
 	}
 }

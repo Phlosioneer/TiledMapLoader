@@ -1,7 +1,7 @@
 package util;
 
 // Note: This class is immutable.
-public final class Rect {
+public final class Rect implements Cloneable {
 	public final int x;
 	public final int y;
 	public final int width;
@@ -12,5 +12,10 @@ public final class Rect {
 		this.y = y;
 		this.width = width;
 		this.height = height;
+	}
+
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+		return super.clone();
 	}
 }

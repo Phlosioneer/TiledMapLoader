@@ -2,12 +2,13 @@ package core;
 
 import org.w3c.dom.Element;
 import privateUtil.Util;
+import util.LayerCastException;
 import util.Vector;
 
 /**
  * The root class for all layers.
  */
-public abstract class Layer {
+public abstract class Layer implements Cloneable {
 	/**
 	 * The ID of the layer. This is unique within the entire map file.
 	 */
@@ -70,4 +71,90 @@ public abstract class Layer {
 	 * Manually create a Layer instance. No fields are initialized.
 	 */
 	public Layer() {}
+
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+		Layer ret = (Layer) super.clone();
+		if (properties != null) {
+			ret.properties = (TMXProperties) properties.clone();
+		}
+		ret.offset = (Vector) offset.clone();
+		return ret;
+	}
+
+	/**
+	 * Convenience method to cast this layer into a TileLayer.
+	 * 
+	 * @param <IMG>
+	 *            The IMG for the casted TileLayer. When casting, this function cannot check
+	 *            that IMG is correct.
+	 * @return This object as a TileLayer.
+	 * @throws LayerCastException
+	 *             If this isn't a TileLayer instance.
+	 */
+	@SuppressWarnings("unchecked")
+	public <IMG> TileLayer<IMG> asTiles() {
+		if (this.getClass() == TileLayer.class) {
+			return (TileLayer<IMG>) this;
+		} else {
+			throw new LayerCastException(name, id, "TileLayer");
+		}
+	}
+
+	/**
+	 * Convenience method to cast this layer into an ObjectLayer.
+	 * 
+	 * @param <IMG>
+	 *            The IMG for the casted ObjectLayer. When casting, this function cannot check
+	 *            that IMG is correct.
+	 * @return This object as an ObjectLayer.
+	 * @throws LayerCastException
+	 *             If this isn't an ObjectLayer instance.
+	 */
+	@SuppressWarnings("unchecked")
+	public <IMG> ObjectLayer<IMG> asObjects() {
+		if (this.getClass() == ObjectLayer.class) {
+			return (ObjectLayer<IMG>) this;
+		} else {
+			throw new LayerCastException(name, id, "ObjectLayer");
+		}
+	}
+
+	/**
+	 * Convenience method to cast this layer into a LayerGroup.
+	 * 
+	 * @param <IMG>
+	 *            The IMG for the casted LayerGroup. When casting, this function cannot check
+	 *            that IMG is correct.
+	 * @return This object as a LayerGroup.
+	 * @throws LayerCastException
+	 *             If this isn't a LayerGroup instance.
+	 */
+	@SuppressWarnings("unchecked")
+	public <IMG> LayerGroup<IMG> asGroup() {
+		if (this.getClass() == LayerGroup.class) {
+			return (LayerGroup<IMG>) this;
+		} else {
+			throw new LayerCastException(name, id, "LayerGroup");
+		}
+	}
+
+	/**
+	 * Convenience method to cast this layer into an ImageLayer.
+	 * 
+	 * @param <IMG>
+	 *            The IMG for the casted ImageLayer. When casting, this function cannot check
+	 *            that IMG is correct.
+	 * @return This object as an ImageLayer.
+	 * @throws LayerCastException
+	 *             If this isn't an ImageLayer instance.
+	 */
+	@SuppressWarnings("unchecked")
+	public <IMG> ImageLayer<IMG> asImage() {
+		if (this.getClass() == ImageLayer.class) {
+			return (ImageLayer<IMG>) this;
+		} else {
+			throw new LayerCastException(name, id, "ImageLayer");
+		}
+	}
 }
