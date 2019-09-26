@@ -78,6 +78,24 @@ public class LayerGroup<IMG> extends Layer {
 	}
 
 	/**
+	 * Search the direct descendents of this group for a layer with the given name.
+	 * 
+	 * @param name
+	 *            The name of the layer to find.
+	 * @return The layers. Cannot be null; if no layers are found, an empty array is
+	 *         returned.
+	 */
+	public ArrayList<Layer> getLayersByName(String name) {
+		ArrayList<Layer> ret = new ArrayList<>();
+		for (Layer layer : layers) {
+			if (layer.name.equals(name)) {
+				ret.add(layer);
+			}
+		}
+		return ret;
+	}
+
+	/**
 	 * Same as <i>getLayerByName</i>, but also searches sub-groups recursively.
 	 * 
 	 * @param name
@@ -99,6 +117,35 @@ public class LayerGroup<IMG> extends Layer {
 			}
 		}
 		return null;
+	}
+
+	/**
+	 * <p>
+	 * Same as <i>getLayersByName</i>, but also searches sub-groups recursively.
+	 * </p>
+	 * 
+	 * <p>
+	 * If a LayerGroup with the given name is found, it is also recursed.
+	 * </p>
+	 * 
+	 * @param name
+	 *            The name of the layer to find.
+	 * @return The layer. Cannot be null; if no layers are found, an empty array is returned.
+	 */
+	public ArrayList<Layer> getLayersByNameRecursive(String name) {
+		ArrayList<Layer> ret = new ArrayList<>();
+		for (Layer layer : layers) {
+			if (layer.name.equals(name)) {
+				ret.add(layer);
+			}
+			if (layer instanceof LayerGroup) {
+				// Technically, we can't know for sure that the layer's IMG type is the same as our IMG type.
+				@SuppressWarnings("unchecked")
+				ArrayList<Layer> recurse = ((LayerGroup<IMG>) layer).getLayersByNameRecursive(name);
+				ret.addAll(recurse);
+			}
+		}
+		return ret;
 	}
 
 	@Override
