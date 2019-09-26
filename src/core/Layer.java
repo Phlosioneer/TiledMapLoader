@@ -28,7 +28,7 @@ public abstract class Layer implements Cloneable {
 	 * 
 	 * <p>
 	 * If this is a group layer, layer offsets
-	 * are cumulative. The total of a layer's <i>offset</i> and all of its parent layers' <i>offset<i>s
+	 * are cumulative. The total of a layer's <i>offset</i> and all of its parent layers' <i>offset</i>s
 	 * gives its actual offset.
 	 * </p>
 	 * 

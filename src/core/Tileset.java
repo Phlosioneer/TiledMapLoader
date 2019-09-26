@@ -1,18 +1,20 @@
 package core;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import org.w3c.dom.Element;
 import privateUtil.Util;
 import privateUtil.Util.ElementIterator;
 import util.AttributeParsingErrorException;
-import util.ImageDelegate;
 import util.Rect;
+import util.ResourceLoaderDelegate;
 
 /**
  * Tileset metadata and tiles.
  *
  * @param <IMG>
+ *            The IMG param of the image delegate. See MapFile for more info.
  */
 public class Tileset<IMG> {
 	/**
@@ -63,11 +65,27 @@ public class Tileset<IMG> {
 	 * The number of tiles in this tileset.
 	 */
 	public int tileCount;
+	/**
+	 * The full image. Null if no image delegate was provided.
+	 */
 	public IMG tilesetImage;
+	/**
+	 * <p>
+	 * A color in the image to treat as transparent. Null if not provided
+	 * </p>
+	 * 
+	 * <p>
+	 * This transparent color is applied even for images with an alpha channel.
+	 * </p>
+	 * 
+	 * <p>
+	 * The alpha component of this color is meaningless.
+	 * </p>
+	 */
 	public TMXColor transparentColor;
 
 	@SuppressWarnings("unchecked")
-	Tileset(Element element, ImageDelegate<IMG> delegate) {
+	Tileset(Element element, ResourceLoaderDelegate<IMG> delegate) {
 		// Read layout info.
 		tileWidth = Util.getIntAttribute(element, "tilewidth");
 		if (tileWidth <= 0) {
@@ -98,11 +116,13 @@ public class Tileset<IMG> {
 		// Get the image file.
 		Element imageTag = Util.getSingleTag(element, "image", true);
 		imageFilePath = Util.getStringAttribute(imageTag, "source");
-		TMXColor transparentColor = Util.getColorAttribute(imageTag, "trans", null);
+		transparentColor = Util.getColorAttribute(imageTag, "trans", null);
 
 		IMG mainImage = null;
 		if (delegate != null) {
-			mainImage = delegate.loadImage(imageFilePath, transparentColor);
+			// TODO: Properly handle relative paths.
+			InputStream imageFile = delegate.openFile(imageFilePath, "");
+			mainImage = delegate.loadImage(imageFile, transparentColor);
 		}
 
 		// Get tile metadata.
