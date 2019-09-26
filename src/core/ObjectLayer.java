@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import org.w3c.dom.Element;
 import privateUtil.Util;
 import util.AttributeParsingErrorException;
+import util.ObjectNotFoundException;
 
 /**
  * A layer containing an array of objects.
@@ -52,7 +53,9 @@ public class ObjectLayer<IMG> extends Layer {
 	 * 
 	 * @param name
 	 *            The object name to look for.
-	 * @return The object, or null if no object was found.
+	 * @return The object. Cannot be null.
+	 * @throws ObjectNotFoundException
+	 *             If no matching object was found.
 	 */
 	public TMXObject getObjectByName(String name) {
 		for (TMXObject object : objects) {
@@ -60,7 +63,7 @@ public class ObjectLayer<IMG> extends Layer {
 				return object;
 			}
 		}
-		return null;
+		throw new ObjectNotFoundException(name);
 	}
 
 	/**

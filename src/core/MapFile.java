@@ -5,9 +5,8 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import org.w3c.dom.Element;
 import privateUtil.Util;
-import util.FileLocatorDelegate;
 import util.FileParsingException;
-import util.ImageDelegate;
+import util.ResourceLoaderDelegate;
 
 /**
  * This class is the main class for the TMX library. It loads a file and all its tilesets.
@@ -21,7 +20,13 @@ public class MapFile<IMG> {
 		ORTHOGONAL, ISOMETRIC, STAGGERED, HEXAGONAL
 	}
 
-	public static enum RenderOrder {
+	/**
+	 * The render order for tiles in layers. Usually, this shouldn't matter. For
+	 * tilesets that are greater than the map's tileWidth or tileHeight, the draw
+	 * order will matter.
+	 *
+	 */
+	public static enum TileRenderOrder {
 		RIGHT_DOWN, RIGHT_UP, LEFT_DOWN, LEFT_UP
 	}
 
@@ -38,35 +43,62 @@ public class MapFile<IMG> {
 	 */
 	public ArrayList<TilesetEntry<IMG>> tilesets;
 	/**
-	 * <p>
-	 * All the layers in the file, from the bottom up. Cannot be null.
-	 * </p>
-	 * 
-	 * <p>
-	 * Layers should be rendered starting at the first element, and then each layer
-	 * is rendered on top of the previous ones.
-	 * </p>
-	 */
-	public ArrayList<Layer> layers;
-	/**
 	 * Map properties. Can be null.
 	 */
 	public TMXProperties properties;
 
 	public Orientation orientation;
-	public RenderOrder renderOrder;
+	public TileRenderOrder renderOrder;
 	public StaggerAxis staggerAxis;
 	public StaggerIndex staggerIndex;
+	/**
+	 * The color to display under all layers.
+	 */
 	public TMXColor backgroundColor;
 
 	private float hexSideLength;
 	private boolean m_hasHexSideLength;
 
+	/**
+	 * <p>
+	 * The width of each tile.
+	 * </p>
+	 * 
+	 * <p>
+	 * This field is not quite the same as the tileWidth of a tileset.
+	 * Tilesets in this map can have different sizes; this tile width determines
+	 * the actual spacing of the tile grid. If a tileset has a larger tile width,
+	 * tiles will overlap. If it's smaller, there will be gaps.
+	 * </p>
+	 */
 	public int tileWidth;
+	/**
+	 * <p>
+	 * The height of each tile.
+	 * </p>
+	 * 
+	 * <p>
+	 * This field is not quite the same as the tileHeight of a tileset.
+	 * Tilesets in this map can have different sizes; this tile height determines
+	 * the actual spacing of the tile grid. If a tileset has a larger tile width,
+	 * tiles will overlap. If it's smaller, there will be gaps.
+	 * </p>
+	 */
 	public int tileHeight;
 
+	/**
+	 * The width of the map and its layers, in tiles.
+	 */
 	public int mapWidth;
+	/**
+	 * The height of the map and its layers, in tiles.
+	 */
 	public int mapHeight;
+
+	/**
+	 * All layers are contained within this layer group.
+	 */
+	public LayerGroup<IMG> root;
 
 	/**
 	 * 
@@ -87,12 +119,11 @@ public class MapFile<IMG> {
 	 * @param filename
 	 *            The file to load. The file is opened using <i>fileDelegate</i>.
 	 * @param fileDelegate
-	 *            An object used when opening files. Cannot be null.
-	 * @param imageDelegate
-	 *            An object to use when slicing tileset images into tile images. Can be null.
+	 *            An object used when opening files, loading images, and slicing images into tile
+	 *            images. Cannot be null.
 	 */
-	public MapFile(String filename, FileLocatorDelegate fileDelegate, ImageDelegate<IMG> imageDelegate) {
-		InputStream file = fileDelegate.openFile(filename);
+	public MapFile(String filename, ResourceLoaderDelegate<IMG> fileDelegate) {
+		InputStream file = fileDelegate.openFile(filename, "");
 		Element root = Util.loadXmlFile(file);
 
 		try {
@@ -121,13 +152,13 @@ public class MapFile<IMG> {
 
 		String renderString = Util.getStringAttribute(root, "renderorder", "right-down");
 		if (renderString.equals("right-down")) {
-			renderOrder = RenderOrder.RIGHT_DOWN;
+			renderOrder = TileRenderOrder.RIGHT_DOWN;
 		} else if (renderString.equals("right-up")) {
-			renderOrder = RenderOrder.RIGHT_UP;
+			renderOrder = TileRenderOrder.RIGHT_UP;
 		} else if (renderString.equals("left-down")) {
-			renderOrder = RenderOrder.LEFT_DOWN;
+			renderOrder = TileRenderOrder.LEFT_DOWN;
 		} else if (renderString.equals("left-up")) {
-			renderOrder = RenderOrder.LEFT_UP;
+			renderOrder = TileRenderOrder.LEFT_UP;
 		} else {
 			throw new FileParsingException("Unrecognized render order: '" + renderString + "'");
 		}
@@ -168,11 +199,11 @@ public class MapFile<IMG> {
 		// Look for tilesets.
 		tilesets = new ArrayList<>();
 		for (Element tilesetEntryElement : Util.getAllTags(root, "tileset")) {
-			tilesets.add(new TilesetEntry<>(tilesetEntryElement, fileDelegate, imageDelegate));
+			tilesets.add(new TilesetEntry<>(tilesetEntryElement, fileDelegate));
 		}
 
 		// Read the map layers, using a layerGroup to do the parsing.
-		this.layers = LayerGroup.parseLayers(root, this, imageDelegate);
+		this.root = new LayerGroup<>(root, this, fileDelegate);
 		Element propertiesTag = Util.getSingleTag(root, "properties", false);
 		if (propertiesTag != null) {
 			properties = new TMXProperties(propertiesTag);
@@ -202,48 +233,6 @@ public class MapFile<IMG> {
 		throw new RuntimeException("Unknown tile gid '" + gid + "'");
 	}
 
-	/**
-	 * Search the direct descendents of this group for a layer with the given name.
-	 * 
-	 * @param name
-	 *            The name of the layer to find.
-	 * @return The layer, or <i>null</i> if no matching layer is found.
-	 */
-	// Basically copy-pasted from LayerGroup.
-	public Layer getLayerByName(String name) {
-		for (Layer layer : layers) {
-			if (layer.name.equals(name)) {
-				return layer;
-			}
-		}
-		return null;
-	}
-
-	/**
-	 * Same as <i>getLayerByName</i>, but also searches sub-groups recursively.
-	 * 
-	 * @param name
-	 *            The name of the layer to find.
-	 * @return The layer, or <i>null</i> if no matching layer is found.
-	 */
-	// Basically copy-pasted from LayerGroup.
-	public Layer getLayerByNameRecursive(String name) {
-		for (Layer layer : layers) {
-			if (layer.name.equals(name)) {
-				return layer;
-			}
-			if (layer instanceof LayerGroup) {
-				// Technically, we can't know for sure that the layer's IMG type is the same as our IMG type.
-				@SuppressWarnings("unchecked")
-				Layer recurse = ((LayerGroup<IMG>) layer).getLayerByNameRecursive(name);
-				if (recurse != null) {
-					return recurse;
-				}
-			}
-		}
-		return null;
-	}
-
 	public boolean hasHexSideLength() {
 		return m_hasHexSideLength;
 	}
@@ -271,19 +260,24 @@ public class MapFile<IMG> {
 		 */
 		public int firstGid;
 
-		TilesetEntry(Element element, FileLocatorDelegate fileDelegate, ImageDelegate<IMG> imageDelegate) {
+		TilesetEntry(Element element, ResourceLoaderDelegate<IMG> fileDelegate) {
 			firstGid = Util.getIntAttribute(element, "firstgid", 1);
 			if (element.hasAttribute("source")) {
 				String filename = element.getAttribute("source");
-				InputStream file = fileDelegate.openFile(filename);
-				tiles = new Tileset<>(Util.loadXmlFile(file), imageDelegate);
-				try {
-					file.close();
-				} catch (IOException e) {
-					System.out.println("TilesetEntry: Error while closing file stream: '" + filename + "'");
+				// TODO: Properly handle relative paths.
+				tiles = fileDelegate.getCachedTileset(filename, "");
+				if (tiles == null) {
+					InputStream file = fileDelegate.openFile(filename, "");
+					tiles = new Tileset<>(Util.loadXmlFile(file), fileDelegate);
+					try {
+						file.close();
+					} catch (IOException e) {
+						System.out.println("TilesetEntry: Error while closing file stream: '" + filename + "'");
+					}
+					fileDelegate.cacheTileset(filename, "", tiles);
 				}
 			} else {
-				tiles = new Tileset<>(element, imageDelegate);
+				tiles = new Tileset<>(element, fileDelegate);
 			}
 		}
 	}

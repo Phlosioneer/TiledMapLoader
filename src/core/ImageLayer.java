@@ -1,10 +1,12 @@
 package core;
 
+import java.io.IOException;
+import java.io.InputStream;
 import org.w3c.dom.Element;
 import privateUtil.Util;
 import util.AttributeNotFoundException;
 import util.AttributeParsingErrorException;
-import util.ImageDelegate;
+import util.ResourceLoaderDelegate;
 
 /**
  * A layer that is a single image.
@@ -45,7 +47,7 @@ public class ImageLayer<IMG> extends Layer {
 	 */
 	public int height;
 
-	ImageLayer(Element element, ImageDelegate<IMG> delegate) {
+	ImageLayer(Element element, ResourceLoaderDelegate<IMG> delegate) {
 		super(element);
 
 		Element imageTag = Util.getSingleTag(element, "image", true);
@@ -71,10 +73,18 @@ public class ImageLayer<IMG> extends Layer {
 			height = -1;
 		}
 
-		if (delegate != null) {
-			image = delegate.loadImage(imagePath, transparentColor);
-		} else {
-			image = null;
+		// TODO: Handle relative paths correctly.
+		image = delegate.getCachedImage(imagePath, "");
+		if (image == null) {
+			InputStream imageFile = delegate.openFile(imagePath, "");
+			image = delegate.loadImage(imageFile, transparentColor);
+			try {
+				imageFile.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				throw new RuntimeException("IOException handler not yet written in ImageLayer of ImageLayer.", e);
+			}
+			delegate.cacheImage(imagePath, "", image);
 		}
 	}
 

@@ -73,6 +73,20 @@ public class Tile<IMG> {
 		this.properties = properties;
 	}
 
+	/**
+	 * <p>
+	 * Returns the global ID of this tile within its parent file.
+	 * </p>
+	 * 
+	 * <p>
+	 * Due to limitations, it can't access the parent file's object directly, so it needs
+	 * the correct parent file as a parameter.
+	 * </p>
+	 * 
+	 * @param parentFile
+	 *            A map instance that uses this tile's tileset.
+	 * @return The global ID of the tile within that map.
+	 */
 	public int getGid(MapFile<IMG> parentFile) {
 		for (MapFile.TilesetEntry<IMG> tilesetEntry : parentFile.tilesets) {
 			if (tilesetEntry.tiles == parent) {

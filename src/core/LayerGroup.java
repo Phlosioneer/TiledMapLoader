@@ -6,7 +6,8 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import privateUtil.Util;
 import util.FileParsingException;
-import util.ImageDelegate;
+import util.LayerNotFoundException;
+import util.ResourceLoaderDelegate;
 
 /**
  * A nested grouping of layers.
@@ -16,22 +17,13 @@ import util.ImageDelegate;
  */
 public class LayerGroup<IMG> extends Layer {
 	/**
-	 * The sub-layers. Cannot be null.
+	 * The sub-layers, bottom-first. Cannot be null.
 	 */
 	public ArrayList<Layer> layers;
 
-	LayerGroup(Element element, MapFile<IMG> parent, ImageDelegate<IMG> delegate) {
+	LayerGroup(Element element, MapFile<IMG> parent, ResourceLoaderDelegate<IMG> delegate) {
 		super(element);
-		layers = parseLayers(element, parent, delegate);
-	}
-
-	/**
-	 * Manually create a LayerGroup instance. No fields are initialized.
-	 */
-	public LayerGroup() {}
-
-	static <IMG> ArrayList<Layer> parseLayers(Element element, MapFile<IMG> parent, ImageDelegate<IMG> delegate) {
-		ArrayList<Layer> layers = new ArrayList<>();
+		layers = new ArrayList<>();
 		NodeList allNodes = element.getChildNodes();
 		for (int i = 0; i < allNodes.getLength(); i++) {
 			Node node = allNodes.item(i);
@@ -57,16 +49,21 @@ public class LayerGroup<IMG> extends Layer {
 				throw new FileParsingException("Unknown element type: '" + name + "'");
 			}
 		}
-
-		return layers;
 	}
+
+	/**
+	 * Manually create a LayerGroup instance. No fields are initialized.
+	 */
+	public LayerGroup() {}
 
 	/**
 	 * Search the direct descendents of this group for a layer with the given name.
 	 * 
 	 * @param name
 	 *            The name of the layer to find.
-	 * @return The layer, or <i>null</i> if no matching layer is found.
+	 * @return The layer. Cannot be null.
+	 * @throws LayerNotFoundException
+	 *             If no matching layer is found.
 	 */
 	public Layer getLayerByName(String name) {
 		for (Layer layer : layers) {
@@ -74,7 +71,7 @@ public class LayerGroup<IMG> extends Layer {
 				return layer;
 			}
 		}
-		return null;
+		throw new LayerNotFoundException(name);
 	}
 
 	/**
@@ -100,7 +97,9 @@ public class LayerGroup<IMG> extends Layer {
 	 * 
 	 * @param name
 	 *            The name of the layer to find.
-	 * @return The layer, or <i>null</i> if no matching layer is found.
+	 * @return The layer. Cannot be null.
+	 * @throws LayerNotFoundException
+	 *             If no matching layer is found.
 	 */
 	public Layer getLayerByNameRecursive(String name) {
 		for (Layer layer : layers) {
@@ -116,7 +115,7 @@ public class LayerGroup<IMG> extends Layer {
 				}
 			}
 		}
-		return null;
+		throw new LayerNotFoundException(name);
 	}
 
 	/**

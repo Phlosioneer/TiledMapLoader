@@ -100,6 +100,20 @@ public final class TMXProperties implements Cloneable {
 		}
 	}
 
+	/**
+	 * <p>
+	 * Checks whether there is a string property with the given name.
+	 * </p>
+	 * 
+	 * <p>
+	 * If a property with the given name exists, but is not a string, this method
+	 * will still return false.
+	 * </p>
+	 * 
+	 * @param name
+	 *            The name of the property.
+	 * @return True if there is a string property with the given name.
+	 */
 	public boolean hasString(String name) {
 		if (stringProps == null) {
 			return false;
@@ -107,6 +121,20 @@ public final class TMXProperties implements Cloneable {
 		return stringProps.containsKey(name);
 	}
 
+	/**
+	 * <p>
+	 * Checks whether there is an integer property with the given name.
+	 * </p>
+	 * 
+	 * <p>
+	 * If a property with the given name exists, but is not an integer, this method
+	 * will still return false.
+	 * </p>
+	 * 
+	 * @param name
+	 *            The name of the property.
+	 * @return True if there is an integer property with the given name.
+	 */
 	public boolean hasInt(String name) {
 		if (intProps == null) {
 			return false;
@@ -114,6 +142,20 @@ public final class TMXProperties implements Cloneable {
 		return intProps.containsKey(name);
 	}
 
+	/**
+	 * <p>
+	 * Checks whether there is a float property with the given name.
+	 * </p>
+	 * 
+	 * <p>
+	 * If a property with the given name exists, but is not a float, this method
+	 * will still return false.
+	 * </p>
+	 * 
+	 * @param name
+	 *            The name of the property.
+	 * @return True if there is a float property with the given name.
+	 */
 	public boolean hasFloat(String name) {
 		if (floatProps == null) {
 			return false;
@@ -121,6 +163,20 @@ public final class TMXProperties implements Cloneable {
 		return floatProps.containsKey(name);
 	}
 
+	/**
+	 * <p>
+	 * Checks whether there is a boolean property with the given name.
+	 * </p>
+	 * 
+	 * <p>
+	 * If a property with the given name exists, but is not a boolean, this method
+	 * will still return false.
+	 * </p>
+	 * 
+	 * @param name
+	 *            The name of the property.
+	 * @return True if there is a boolean property with the given name.
+	 */
 	public boolean hasBool(String name) {
 		if (boolProps == null) {
 			return false;
@@ -128,6 +184,20 @@ public final class TMXProperties implements Cloneable {
 		return boolProps.containsKey(name);
 	}
 
+	/**
+	 * <p>
+	 * Checks whether there is a color property with the given name.
+	 * </p>
+	 * 
+	 * <p>
+	 * If a property with the given name exists, but is not a color, this method
+	 * will still return false.
+	 * </p>
+	 * 
+	 * @param name
+	 *            The name of the property.
+	 * @return True if there is a color property with the given name.
+	 */
 	public boolean hasColor(String name) {
 		if (colorProps == null) {
 			return false;
