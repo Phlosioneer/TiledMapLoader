@@ -103,7 +103,7 @@ public class LayerGroup<IMG> extends Layer {
 				return layer;
 			}
 		}
-		throw new LayerNotFoundException(name);
+		throw new LayerNotFoundException(name, layers, false);
 	}
 
 	/**
@@ -147,7 +147,7 @@ public class LayerGroup<IMG> extends Layer {
 				}
 			}
 		}
-		throw new LayerNotFoundException(name);
+		throw new LayerNotFoundException(name, layers, true);
 	}
 
 	/**
