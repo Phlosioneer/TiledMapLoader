@@ -5,9 +5,11 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import privateUtil.Util;
+import util.AttributeNotFoundException;
 import util.FileParsingException;
 import util.LayerNotFoundException;
 import util.ResourceLoaderDelegate;
+import util.Vector;
 
 /**
  * A nested grouping of layers.
@@ -23,6 +25,36 @@ public class LayerGroup<IMG> extends Layer {
 
 	LayerGroup(Element element, MapFile<IMG> parent, ResourceLoaderDelegate<IMG> delegate) {
 		super(element);
+		this.init(element, parent, delegate);
+	}
+
+	LayerGroup(Element element, MapFile<IMG> parent, ResourceLoaderDelegate<IMG> delegate, boolean ignoreMissing) {
+		super();
+		try {
+			Layer temp = new Layer(element) {};
+			this.id = temp.id;
+			this.isVisible = temp.isVisible;
+			this.name = temp.name;
+			this.offset = temp.offset;
+			this.opacity = temp.opacity;
+			this.properties = temp.properties;
+		} catch (AttributeNotFoundException e) {
+			if (ignoreMissing) {
+				this.id = -1;
+				this.isVisible = true;
+				this.name = "root";
+				this.offset = new Vector();
+				this.opacity = 1;
+				this.properties = null;
+			} else {
+				throw e;
+			}
+		}
+		super.isVisible = true;
+		this.init(element, parent, delegate);
+	}
+
+	private void init(Element element, MapFile<IMG> parent, ResourceLoaderDelegate<IMG> delegate) {
 		layers = new ArrayList<>();
 		NodeList allNodes = element.getChildNodes();
 		for (int i = 0; i < allNodes.getLength(); i++) {
