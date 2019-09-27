@@ -34,11 +34,11 @@ public class TMXColor implements Cloneable {
 	 * Construct a fully opaque color.
 	 * 
 	 * @param red
-	 *            The red channel value. 0 <= red < 256.
+	 *            The red channel value. 0 &lt;= red &lt; 256.
 	 * @param blue
-	 *            The blue channel value. 0 <= blue < 256.
+	 *            The blue channel value. 0 &lt;= blue &lt; 256.
 	 * @param green
-	 *            The green channel value. 0 <= green < 256.
+	 *            The green channel value. 0 &lt;= green &lt; 256.
 	 */
 	public TMXColor(int red, int blue, int green) {
 		this(red, blue, green, 255);
@@ -48,13 +48,13 @@ public class TMXColor implements Cloneable {
 	 * Construct a color.
 	 * 
 	 * @param red
-	 *            The red channel value. 0 <= red < 256.
+	 *            The red channel value. 0 &lt;= red &lt; 256.
 	 * @param blue
-	 *            The blue channel value. 0 <= blue < 256.
+	 *            The blue channel value. 0 &lt;= blue &lt; 256.
 	 * @param green
-	 *            The green channel value. 0 <= green < 256.
+	 *            The green channel value. 0 &lt;= green &lt; 256.
 	 * @param alpha
-	 *            The alpha channel value. 0 <= alpha < 256.
+	 *            The alpha channel value. 0 &lt;= alpha &lt; 256.
 	 *            0 = transparent, 255 = opaque.
 	 */
 	public TMXColor(int red, int blue, int green, int alpha) {
