@@ -203,7 +203,7 @@ public class MapFile<IMG> {
 		}
 
 		// Read the map layers, using a layerGroup to do the parsing.
-		this.root = new LayerGroup<>(root, this, fileDelegate);
+		this.root = new LayerGroup<>(root, this, fileDelegate, true);
 		Element propertiesTag = Util.getSingleTag(root, "properties", false);
 		if (propertiesTag != null) {
 			properties = new TMXProperties(propertiesTag);
