@@ -52,6 +52,36 @@ public interface ResourceLoaderDelegate<IMG> {
 	IMG sliceImage(IMG image, Rect pixelBounds);
 
 	/**
+	 * Called to create a new, blank image. Used while rendering layers.
+	 * 
+	 * @param width
+	 *            The width of the new image, in pixels.
+	 * @param height
+	 *            The height of the new image, in pixels.
+	 * @return A blank, transparent image object.
+	 */
+	IMG blankImage(int width, int height);
+
+	/**
+	 * Called to compose newImage onto baseImage, at the given coordinates. The
+	 * coordinates assume the origin of baseImage is in the upper-left corner,
+	 * and the origin of newImage is its upper-left corner.
+	 * 
+	 * If the rendering would put the newImage partially or fully outside the
+	 * bounds of baseImage, the portion that is inside baseImage should be drawn.
+	 * 
+	 * @param baseImage
+	 *            The image being modified
+	 * @param newImage
+	 *            The image to draw
+	 * @param transform
+	 * 
+	 * @return The new baseImage, if the object is different, or the original
+	 *         baseImage. Never return null; throw an exception instead.
+	 */
+	IMG composeOntoImage(IMG baseImage, IMG newImage, ImageTransform transform);
+
+	/**
 	 * Called before attempting to load a tileset file.
 	 * 
 	 * @param filename

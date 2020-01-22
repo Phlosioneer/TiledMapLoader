@@ -3,6 +3,8 @@ package core;
 import org.w3c.dom.Element;
 import privateUtil.Util;
 import util.LayerCastException;
+import util.Rect;
+import util.ResourceLoaderDelegate;
 import util.Vector;
 
 /**
@@ -157,4 +159,37 @@ public abstract class Layer implements Cloneable {
 			throw new LayerCastException(name, id, "ImageLayer");
 		}
 	}
+
+	/**
+	 * 
+	 * @param <IMG>
+	 *            The image type. MUST be the same type as other IMG parameters!
+	 * @param pixelBounds
+	 *            The bounds to draw.
+	 * @param delegate
+	 *            The image handling delegate.
+	 * @return The rendered layer.
+	 */
+	public <IMG> IMG renderToImage(Rect pixelBounds, ResourceLoaderDelegate<IMG> delegate) {
+		IMG baseImage = delegate.blankImage(pixelBounds.width, pixelBounds.height);
+		return renderToImage(pixelBounds, baseImage, new Vector(), 1, delegate);
+	}
+
+	/**
+	 * 
+	 * @param <IMG>
+	 *            THe image type. MUST be the same type as other IMG parameters!
+	 * @param pixelBounds
+	 *            The bounds to draw.
+	 * @param baseImage
+	 *            The image to draw onto.
+	 * @param renderOffset
+	 *            The offset for this layer on the image.
+	 * @param opacity
+	 *            The opacity for this layer.
+	 * @param delegate
+	 *            The image handling delegate.
+	 * @return The rendered layer.
+	 */
+	abstract public <IMG> IMG renderToImage(Rect pixelBounds, IMG baseImage, Vector renderOffset, float opacity, ResourceLoaderDelegate<IMG> delegate);
 }

@@ -156,4 +156,16 @@ public abstract class TMXObject implements Cloneable {
 			throw new TMXObjectCastException(name, id, "TextObject");
 		}
 	}
+
+	public boolean isTile() {
+		return false;
+	}
+
+	public boolean isShape() {
+		return false;
+	}
+
+	public boolean isText() {
+		return false;
+	}
 }

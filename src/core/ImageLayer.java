@@ -6,7 +6,10 @@ import org.w3c.dom.Element;
 import privateUtil.Util;
 import util.AttributeNotFoundException;
 import util.AttributeParsingErrorException;
+import util.ImageTransform;
+import util.Rect;
 import util.ResourceLoaderDelegate;
+import util.Vector;
 
 /**
  * A layer that is a single image.
@@ -92,6 +95,18 @@ public class ImageLayer<IMG> extends Layer {
 	 * Manually create an ImageLayer instance. No fields are initialized.
 	 */
 	public ImageLayer() {}
+
+	@Override
+	public <IMG2> IMG2 renderToImage(Rect pixelBounds, IMG2 baseImage, Vector renderOffset, float opacity, ResourceLoaderDelegate<IMG2> delegate) {
+		int netOffsetX = Math.round(renderOffset.x);
+		int netOffsetY = Math.round(renderOffset.y);
+		float netOpacity = Util.combineOpacities(opacity, this.opacity);
+		@SuppressWarnings("unchecked")
+		IMG2 castImage = (IMG2) image;
+		ImageTransform transform = new ImageTransform(netOffsetX, netOffsetY, netOpacity);
+		// TODO: Respect pixelBounds
+		return delegate.composeOntoImage(baseImage, castImage, transform);
+	}
 
 	/**
 	 * WARNING: DOES NOT CLONE IMAGE.

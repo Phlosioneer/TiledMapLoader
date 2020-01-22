@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import org.w3c.dom.Element;
 import privateUtil.Util;
 import util.FileParsingException;
+import util.Rect;
 import util.ResourceLoaderDelegate;
 
 /**
@@ -242,6 +243,14 @@ public class MapFile<IMG> {
 			throw new RuntimeException("Hex side length not set!");
 		}
 		return hexSideLength;
+	}
+
+	public IMG renderToImage(ResourceLoaderDelegate<IMG> delegate) {
+		return root.renderToImage(new Rect(0, 0, tileWidth * mapWidth, tileHeight * mapHeight), delegate);
+	}
+
+	public IMG renderToImage(Rect pixelBounds, ResourceLoaderDelegate<IMG> delegate) {
+		return root.renderToImage(pixelBounds, delegate);
 	}
 
 	/**

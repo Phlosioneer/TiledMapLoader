@@ -8,6 +8,7 @@ import privateUtil.Util;
 import util.AttributeNotFoundException;
 import util.FileParsingException;
 import util.LayerNotFoundException;
+import util.Rect;
 import util.ResourceLoaderDelegate;
 import util.Vector;
 
@@ -31,7 +32,12 @@ public class LayerGroup<IMG> extends Layer {
 	LayerGroup(Element element, MapFile<IMG> parent, ResourceLoaderDelegate<IMG> delegate, boolean ignoreMissing) {
 		super();
 		try {
-			Layer temp = new Layer(element) {};
+			Layer temp = new Layer(element) {
+				@Override
+				public <IMG2> IMG2 renderToImage(Rect pixelBounds, IMG2 baseImage, Vector renderOffset, float opacity, ResourceLoaderDelegate<IMG2> delegate) {
+					return null;
+				}
+			};
 			this.id = temp.id;
 			this.isVisible = temp.isVisible;
 			this.name = temp.name;
@@ -177,6 +183,26 @@ public class LayerGroup<IMG> extends Layer {
 			}
 		}
 		return ret;
+	}
+
+	@Override
+	public <IMG2> IMG2 renderToImage(Rect pixelBounds, IMG2 baseImage, Vector renderOffset, float opacity, ResourceLoaderDelegate<IMG2> delegate) {
+		IMG2 mutableBaseImage = baseImage;
+		float netOpacity = Util.combineOpacities(opacity, this.opacity);
+		for (Layer layer : layers) {
+			if (!layer.isVisible) {
+				continue;
+			}
+			float netOffsetX = layer.offset.x + renderOffset.x;
+			float netOffsetY = layer.offset.y + renderOffset.y;
+			Vector netOffset = new Vector(netOffsetX, netOffsetY);
+			int adjustedX = Math.round(pixelBounds.x + renderOffset.x);
+			int adjustedY = Math.round(pixelBounds.y + renderOffset.y);
+			Rect adjustedBounds = new Rect(adjustedX, adjustedY, pixelBounds.width, pixelBounds.height);
+			mutableBaseImage = layer.renderToImage(adjustedBounds, mutableBaseImage, netOffset, netOpacity, delegate);
+		}
+
+		return mutableBaseImage;
 	}
 
 	@Override

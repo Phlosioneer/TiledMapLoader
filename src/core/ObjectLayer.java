@@ -4,7 +4,11 @@ import java.util.ArrayList;
 import org.w3c.dom.Element;
 import privateUtil.Util;
 import util.AttributeParsingErrorException;
+import util.ImageTransform;
 import util.ObjectNotFoundException;
+import util.Rect;
+import util.ResourceLoaderDelegate;
+import util.Vector;
 
 /**
  * A layer containing an array of objects.
@@ -98,6 +102,26 @@ public class ObjectLayer<IMG> extends Layer {
 			}
 		}
 		return ret;
+	}
+
+	@Override
+	public <IMG2> IMG2 renderToImage(Rect pixelBounds, IMG2 baseImage, Vector renderOffset, float opacity, ResourceLoaderDelegate<IMG2> delegate) {
+		IMG2 mutableBaseImage = baseImage;
+		// TODO: Respect pixelBounds
+		for (TMXObject object : objects) {
+			if (!object.isVisible || object.isTile()) {
+				continue;
+			}
+			int netX = Math.round(renderOffset.x + object.position.x);
+			int netY = Math.round(renderOffset.y + object.position.y);
+			float netOpacity = Util.combineOpacities(opacity, this.opacity);
+			@SuppressWarnings("unchecked")
+			IMG2 image = (IMG2) object.asTile().tile;
+			ImageTransform transform = new ImageTransform(netX, netY, netOpacity);
+			mutableBaseImage = delegate.composeOntoImage(mutableBaseImage, image, transform);
+		}
+
+		return mutableBaseImage;
 	}
 
 	@Override

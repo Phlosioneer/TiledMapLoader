@@ -38,4 +38,9 @@ public class TileObject<IMG> extends TMXObject {
 	 * Manually create a TileObject instance. No fields are initialized.
 	 */
 	public TileObject() {}
+
+	@Override
+	public boolean isTile() {
+		return true;
+	}
 }

@@ -22,6 +22,10 @@ import util.AttributeParsingErrorException;
  */
 public abstract class Util {
 
+	public static float combineOpacities(float op1, float op2) {
+		return 1 - (1 - op1) * (1 - op2);
+	}
+
 	/**
 	 * Load the given file into a Dom, then return the root element of the Dom. The filename should include
 	 * the extension to the file.

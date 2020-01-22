@@ -224,6 +224,11 @@ public class TextObject extends TMXObject {
 	}
 
 	@Override
+	public boolean isText() {
+		return true;
+	}
+
+	@Override
 	public Object clone() throws CloneNotSupportedException {
 		TextObject ret = (TextObject) super.clone();
 		ret.color = (TMXColor) color.clone();

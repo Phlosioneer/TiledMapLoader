@@ -121,8 +121,13 @@ public class Tileset<IMG> {
 		IMG mainImage = null;
 		if (delegate != null) {
 			// TODO: Properly handle relative paths.
-			InputStream imageFile = delegate.openFile(imageFilePath, "");
-			mainImage = delegate.loadImage(imageFile, transparentColor);
+			if (imageFilePath.toLowerCase().endsWith("tmx")) {
+				MapFile<IMG> subtileMap = new MapFile<>(imageFilePath, delegate);
+				mainImage = subtileMap.renderToImage(delegate);
+			} else {
+				InputStream imageFile = delegate.openFile(imageFilePath, "");
+				mainImage = delegate.loadImage(imageFile, transparentColor);
+			}
 		}
 
 		// Get tile metadata.
@@ -137,7 +142,7 @@ public class Tileset<IMG> {
 		}
 
 		// Make tiles.
-		tiles = (Tile<IMG>[]) new Tile[tileCount];
+		tiles = new Tile[tileCount];
 		for (int i = 0; i < tileCount; i++) {
 			// Calculate the position of the tile in the spritesheet.
 			int x = i % columns;
