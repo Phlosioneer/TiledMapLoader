@@ -38,16 +38,15 @@ test {
     useJUnitPlatform()
 }
 
-task sourceJar(type: Jar) {
-	from sourceSets.main.allJava
-	archiveClassifier = "sources"
+java {
+	withSourcesJar()
+	withJavadocJar()
 }
 
 publishing {
 	publications {
 		localPublication(MavenPublication) {
 			from components.java
-			artifact sourceJar
 			pom {
 				name = "TiledMapLoader"
 				description = "Java loader for TMX format"
