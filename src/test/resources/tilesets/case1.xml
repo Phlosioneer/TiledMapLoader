@@ -1,0 +1,18 @@
+<wangset name="Rock" tile="-1">
+ <wangcornercolor name="Any" color="#ff0000" tile="-1" probability="1"/>
+ <wangcornercolor name="LooseRock" color="#00ff00" tile="-1" probability="1"/>
+ <wangtile tileid="6" wangid="0x10102010"/>
+ <wangtile tileid="7" wangid="0x10202010"/>
+ <wangtile tileid="8" wangid="0x10201010"/>
+ <wangtile tileid="9" wangid="0x20201020"/>
+ <wangtile tileid="10" wangid="0x20102020"/>
+ <wangtile tileid="22" wangid="0x10102020"/>
+ <wangtile tileid="24" wangid="0x20201010"/>
+ <wangtile tileid="25" wangid="0x20202010"/>
+ <wangtile tileid="26" wangid="0x10202020"/>
+ <wangtile tileid="38" wangid="0x10101020"/>
+ <wangtile tileid="39" wangid="0x20101020"/>
+ <wangtile tileid="40" wangid="0x20101010"/>
+ <wangtile tileid="41" wangid="0x20102010"/>
+ <wangtile tileid="42" wangid="0x10201020"/>
+</wangset>

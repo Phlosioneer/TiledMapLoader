@@ -51,18 +51,16 @@ public class Wangset {
 		}
 
 		colors = new ArrayList<>();
-		Element corners = Util.getSingleTag(element, "wangcornercolors", false);
-		if (corners != null) {
-			int colorId = 0;
-			for (Element colorTag : Util.getAllTags(corners, "wangcornercolor")) {
+		{
+			int colorId = 1;
+			for (Element colorTag : Util.getAllTags(element, "wangcornercolor")) {
 				colors.add(new WangColor(colorTag, SideType.CORNER, colorId));
 				colorId += 1;
 			}
 		}
-		Element edges = Util.getSingleTag(element, "wangedgecolors", false);
-		if (edges != null) {
-			int colorId = 0;
-			for (Element colorTag : Util.getAllTags(edges, "wangedgecolor")) {
+		{
+			int colorId = 1;
+			for (Element colorTag : Util.getAllTags(element, "wangedgecolor")) {
 				colors.add(new WangColor(colorTag, SideType.EDGE, colorId));
 				colorId += 1;
 			}
