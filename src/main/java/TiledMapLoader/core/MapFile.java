@@ -219,6 +219,8 @@ public class MapFile<IMG> {
 	 * @param gid
 	 *            The ID to lookup.
 	 * @return The corresponding tile.
+	 * @throws RuntimeException
+	 *             If there isn't a tile for the given gid.
 	 */
 	public Tile<IMG> getTile(int gid) {
 		if (gid == 0) {
@@ -251,6 +253,28 @@ public class MapFile<IMG> {
 
 	public IMG renderToImage(Rect pixelBounds, ResourceLoaderDelegate<IMG> delegate) {
 		return root.renderToImage(pixelBounds, delegate);
+	}
+
+	/**
+	 * <p>
+	 * Finds a tileset by its name field (not its file name).
+	 * </p>
+	 * 
+	 * <p>
+	 * If multiple tilesets have the same name, the first one will be returned.
+	 * </p>
+	 * 
+	 * @param name
+	 *            The name to lookup.
+	 * @return The tileset, or null if not found.
+	 */
+	public Tileset<IMG> getTilesetByName(String name) {
+		for (TilesetEntry<IMG> tileset : tilesets) {
+			if (tileset.tiles.name.equals(name)) {
+				return tileset.tiles;
+			}
+		}
+		return null;
 	}
 
 	/**
