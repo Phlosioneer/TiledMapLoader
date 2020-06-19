@@ -1,7 +1,0 @@
-<properties>
-	<property name="testInt" type="int" value="89"/>
-	<property name="testImpString" value="foo"/>
-	<property name="testExpString" type="string" value="bar"/>
-	<property name="testFloat" type="float" value="3.14"/>
-	<property name="testBool" type="bool" value="true"/>
-</properties>

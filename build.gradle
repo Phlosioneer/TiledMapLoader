@@ -16,7 +16,7 @@ plugins {
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
-version = '1.0.0'
+version = '1.0.1'
 
 repositories {
     // Use jcenter for resolving dependencies.
@@ -36,6 +36,7 @@ dependencies {
 test {
     // Use junit platform for unit tests
     useJUnitPlatform()
+    
 }
 
 java {

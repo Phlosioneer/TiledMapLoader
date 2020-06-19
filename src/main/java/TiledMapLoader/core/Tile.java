@@ -57,7 +57,18 @@ public class Tile<IMG> {
 	 */
 	public Tileset<IMG> parent;
 
-	Tile(Tileset<IMG> parent, int id, Rect pixelRect) {
+	/**
+	 * Internal method to create tiles. Do not use unless you're building using a blank
+	 * Tileset.
+	 * 
+	 * @param parent
+	 *            The parent tileset.
+	 * @param id
+	 *            The ID for this tile.
+	 * @param pixelRect
+	 *            The location of this tile's image inside the tileset's image.
+	 */
+	public Tile(Tileset<IMG> parent, int id, Rect pixelRect) {
 		localId = id;
 		this.pixelRect = pixelRect;
 		tileType = "";

@@ -30,16 +30,16 @@ public class Tileset<IMG> {
 	 */
 	public String name;
 	/**
-	 * The width of each tile.
+	 * The width of each tile. Cannot be 0.
 	 */
 	public int tileWidth;
 	/**
-	 * The height of each tile.
+	 * The height of each tile. Cannot be 0.
 	 */
 	public int tileHeight;
 	/**
 	 * <p>
-	 * The number of tiles in each row of the tilesheet.
+	 * The number of tiles in each row of the tilesheet. Cannot be 0.
 	 * </p>
 	 * 
 	 * <p>
@@ -84,8 +84,38 @@ public class Tileset<IMG> {
 	 */
 	public TMXColor transparentColor;
 
-	@SuppressWarnings("unchecked")
+	public ArrayList<Wangset> wangsets;
+
 	Tileset(Element element, ResourceLoaderDelegate<IMG> delegate) {
+		init(element, delegate);
+	}
+
+	/**
+	 * Creates an empty tileset.
+	 */
+	@SuppressWarnings("unchecked")
+	public Tileset() {
+		imageFilePath = "";
+		tiles = new Tile[0];
+		name = "";
+		tileWidth = 1;
+		tileHeight = 1;
+		columns = 1;
+		properties = null;
+		tileCount = 0;
+		tilesetImage = null;
+		transparentColor = null;
+		wangsets = null;
+	}
+
+	@SuppressWarnings("unchecked")
+	public Tileset(String filename, ResourceLoaderDelegate<IMG> delegate) {
+		InputStream file = delegate.openFile(filename, "");
+		Element rootElement = Util.loadXmlFile(file);
+		init(rootElement, delegate);
+	}
+
+	private void init(Element element, ResourceLoaderDelegate<IMG> delegate) {
 		// Read layout info.
 		tileWidth = Util.getIntAttribute(element, "tilewidth");
 		if (tileWidth <= 0) {
@@ -197,6 +227,16 @@ public class Tileset<IMG> {
 				tile.tileType = tileType;
 			}
 			tiles[i] = tile;
+		}
+
+		// Get wangsets
+		Element wangsTag = Util.getSingleTag(element, "wangsets", false);
+		wangsets = new ArrayList<>();
+		if (wangsTag != null) {
+			for (Element wangSetTag : Util.getAllTags(wangsTag, "wangset")) {
+				Wangset set = new Wangset(wangSetTag, this);
+				wangsets.add(set);
+			}
 		}
 	}
 }

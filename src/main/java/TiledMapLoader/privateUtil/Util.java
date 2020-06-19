@@ -50,7 +50,8 @@ public abstract class Util {
 
 		} catch (ParserConfigurationException e) {
 			// TODO Auto-generated catch block
-			throw new RuntimeException("ParserConfigurationException handler not yet written in constructor of MapFile.", e);
+			throw new RuntimeException(
+					"ParserConfigurationException handler not yet written in constructor of MapFile.", e);
 		} catch (SAXException e) {
 			// TODO Auto-generated catch block
 			throw new RuntimeException("SAXException handler not yet written in loadXmlFile of Util.", e);
@@ -227,9 +228,11 @@ public abstract class Util {
 
 		if (unparsedColor.length() - prefixOffset != 6 && unparsedColor.length() - prefixOffset != 8) {
 			if (prefixOffset == 1) {
-				throw new AttributeParsingErrorException(e, attributeName, "Invalid color format; expected #RRGGBB or #RRGGBBAA.", unparsedColor);
+				throw new AttributeParsingErrorException(e, attributeName,
+						"Invalid color format; expected #RRGGBB or #RRGGBBAA.", unparsedColor);
 			} else {
-				throw new AttributeParsingErrorException(e, attributeName, "Invalid color format; expected RRGGBB or RRGGBBAA.", unparsedColor);
+				throw new AttributeParsingErrorException(e, attributeName,
+						"Invalid color format; expected RRGGBB or RRGGBBAA.", unparsedColor);
 			}
 		}
 
@@ -270,7 +273,8 @@ public abstract class Util {
 			try {
 				alpha = Integer.parseInt(alphaString, 16);
 			} catch (NumberFormatException exception) {
-				throw new AttributeParsingErrorException(e, attributeName, "Invalid alpha value", alphaString, exception);
+				throw new AttributeParsingErrorException(e, attributeName, "Invalid alpha value", alphaString,
+						exception);
 
 			}
 		} else {
@@ -410,9 +414,13 @@ public abstract class Util {
 		if (!e.hasAttribute(name)) {
 			throw new AttributeNotFoundException(e, name);
 		}
-		String unparsed = e.getAttribute(name);
+		String unparsed = e.getAttribute(name).trim();
 		try {
-			return Integer.parseInt(unparsed);
+			if (unparsed.length() > 3 && unparsed.substring(0, 2).equalsIgnoreCase("0x")) {
+				return Integer.parseInt(unparsed.substring(2), 16);
+			} else {
+				return Integer.parseInt(unparsed);
+			}
 		} catch (NumberFormatException except) {
 			throw new AttributeParsingErrorException(e, name, except);
 		}
@@ -618,7 +626,8 @@ public abstract class Util {
 			return null;
 		}
 		if (foundChildrenCount != 1) {
-			throw new RuntimeException(getFullXmlPath(e) + ": Expected only one tag named '" + tagName + "', found " + foundChildrenCount);
+			throw new RuntimeException(
+					getFullXmlPath(e) + ": Expected only one tag named '" + tagName + "', found " + foundChildrenCount);
 		}
 		return ret;
 	}

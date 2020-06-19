@@ -68,4 +68,14 @@ public class TMXColor implements Cloneable {
 	public Object clone() throws CloneNotSupportedException {
 		return super.clone();
 	}
+
+	/**
+	 * Converts this color into {@code 0xAARRGGBB} format, where A is the alpha channel, R
+	 * is the red channel, G is the green channel, and B is the blue channel.
+	 * 
+	 * @return The encoded color.
+	 */
+	public int toRGBA() {
+		return (alpha << 24) | (red << 16) | (green << 8) | blue;
+	}
 }
